@@ -4,17 +4,20 @@ import ReactDOM from 'react-dom';
 document.addEventListener('DOMContentLoaded', function(){
 
     class SearchBar extends React.Component{
+        constructor(props){
+            super(props);
+        }
         render(){
             return(
                 <div>
                     <p>Type text to find a product or choose a category.</p>
                     <form>
-                        <input onChange={this.props.handleFilter} type="text" placeholder="Search..." />
-                        <select onChange={this.props.handleOption}>
+                        <input disabled={this.props.disableOption} onChange={this.props.handleFilter} type="text" placeholder="Search..." />
+                        <select disabled={this.props.disableFilter} onChange={this.props.handleOption}>
                             <option value={""}>All categories</option>
                             {this.props.productlist
                                 .map(product =>
-                                    <option value={product.category}>
+                                    <option key={product.category} value={product.category}>
                                         {product.category}
                                     </option>
                                 )
@@ -26,13 +29,47 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
+    class ProductDescription extends React.Component {
+        constructor(props){
+            super(props);
+            this.state={
+                product: "Click name of the product/meal you want to read about...",
+                recipe: "",
+                image: ""
+            }
+        }
+        componentWillReceiveProps(nextProps){
+            if (nextProps.clickedProduct !== this.props.clickedProduct) {
+                this.setState({
+                    product: nextProps.clickedProduct,
+                    recipe: nextProps.recipe,
+                    image: nextProps.image
+                });
+            }
+        }
+        render(){
+            return(
+                <div id="recipee" className="box recipe">
+                    <h2>Recipe</h2>
+                    <p>{this.state.product}</p>
+                    <div className="image" style={{backgroundImage: "url(" + this.state.image + ")", display: this.props.displayImage}}></div>
+                    <p>{this.state.recipe}</p>
+                    <button id="backToTop"><a href="#top">Back to product list</a></button>
+                </div>
+            )
+        }
+    }
+
     class Products extends React.Component {
+        constructor(props){
+            super(props);
+        }
         getFilteredProductsByName() {
             const filter = this.props.filter.toLowerCase();
 
-            var filteredProducts = this.props.products.map(obj => {
+            var filteredProducts = this.props.products.map((obj) => {
                 var filtered = Object.values(obj.products)
-                    .filter(p => p.toLowerCase().indexOf(filter) > -1);
+                    .filter(p => p[0].toLowerCase().indexOf(filter) > -1);
                 if (filtered.length === 0) return null;
                 return { ...obj, ...{ products: filtered } };
             })
@@ -57,12 +94,12 @@ document.addEventListener('DOMContentLoaded', function(){
         render() {
             if(this.props.filter!="") {
                 return (
-                    <div>
+                    <div id="top" className="box list">
                         {this.getFilteredProductsByName()
                             .map((product, ind) =>
                                 <div key={ind}>
                                     <h2>{product.category}</h2>
-                                    {Object.values(product.products).map(name => <li>{name}</li>)}
+                                    {Object.values(product.products).map(name => <li key={name}><a href="#recipee" onClick={this.props.handleClickedProduct(name)}>{name[0]}</a></li>)}
                                 </div>
                             )
                         }
@@ -70,12 +107,12 @@ document.addEventListener('DOMContentLoaded', function(){
                 );
             } if(this.props.option!="") {
                 return (
-                    <div>
+                    <div id="top" className="box list">
                         {this.getFilteredProductsByOption()
                             .map((product, ind) =>
                                 <div key={ind}>
                                     <h2>{product.category}</h2>
-                                    {Object.values(product.products).map(name => <li>{name}</li>)}
+                                    {Object.values(product.products).map((name) => <li key={name}><a href="#recipee" onClick={this.props.handleClickedProduct(name)}>{name[0]}</a></li>)}
                                 </div>
                             )
                         }
@@ -83,12 +120,12 @@ document.addEventListener('DOMContentLoaded', function(){
                 );
             }
             return (
-                <div>
+                <div id="top" className="box list">
                     {this.props.products
                         .map((product, ind) =>
                             <div key={ind}>
                                 <h2>{product.category}</h2>
-                                {Object.values(product.products).map(name => <li>{name}</li>)}
+                                {Object.values(product.products).map((name) => <li key={name}><a href="#recipee" onClick={this.props.handleClickedProduct(name)}>{name[0]}</a></li>)}
                             </div>
                         )
                     }
@@ -103,14 +140,38 @@ document.addEventListener('DOMContentLoaded', function(){
             this.state={
                 productlist: [],
                 filterText: "",
-                option: ""
+                option: "",
+                clickedProduct: "",
+                recipe: "",
+                image: "",
+                disableFilter: false,
+                disableOption: false,
+                displayImage: "none"
             };
         }
         handleFilter = (e) => {
             this.setState({ filterText: e.target.value });
+            if(e.target.value.length != 0){
+                this.setState({ disableFilter: true });
+            } else {
+                this.setState({ disableFilter: false });
+            }
         }
         handleOption = (e) => {
             this.setState({ option: e.target.value });
+            if(e.target.value != ""){
+                this.setState({ disableOption: true });
+            } else {
+                this.setState({ disableOption: false });
+            }
+        }
+        handleClickedProduct = (name) => (e) => {
+            this.setState({
+                clickedProduct: name[0],
+                recipe: name[1],
+                image: name[2],
+                displayImage: "block"
+            });
         }
         componentDidMount(){
             fetch('http://localhost:3000/products')
@@ -125,11 +186,16 @@ document.addEventListener('DOMContentLoaded', function(){
         }
         render(){
             return(
-                <div>
-                    <h1>Product list</h1>
-                    <h2>Traditional food from Silesia</h2>
-                    <SearchBar handleOption= { this.handleOption } filter={ this.state.filterText } handleFilter= { this.handleFilter } productlist={ this.state.productlist } />
-                    <Products option={ this.state.option } filter={ this.state.filterText } products={ this.state.productlist }/>
+                <div className="wrapper">
+                    <div className="nav" style={{backgroundImage: "url(./dist/img/nav.jpg)"}}>
+                        <h1>Product list</h1>
+                        <h2>Traditional food from Silesia</h2>
+                        <SearchBar disableOption={ this.state.disableOption } disableFilter={ this.state.disableFilter } handleOption= { this.handleOption } filter={ this.state.filterText } handleFilter= { this.handleFilter } productlist={ this.state.productlist } />
+                    </div>
+                    <div className="full">
+                        <Products handleClickedProduct= { this.handleClickedProduct } option={ this.state.option } filter={ this.state.filterText } products={ this.state.productlist }/>
+                        <ProductDescription displayImage={ this.state.displayImage } image={ this.state.image } recipe={ this.state.recipe } clickedProduct={ this.state.clickedProduct }/>
+                    </div>
                 </div>
             )
         }

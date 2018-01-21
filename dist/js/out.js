@@ -10090,10 +10090,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var SearchBar = function (_React$Component) {
         _inherits(SearchBar, _React$Component);
 
-        function SearchBar() {
+        function SearchBar(props) {
             _classCallCheck(this, SearchBar);
 
-            return _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).apply(this, arguments));
+            return _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
         }
 
         _createClass(SearchBar, [{
@@ -10110,10 +10110,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     _react2.default.createElement(
                         'form',
                         null,
-                        _react2.default.createElement('input', { onChange: this.props.handleFilter, type: 'text', placeholder: 'Search...' }),
+                        _react2.default.createElement('input', { disabled: this.props.disableOption, onChange: this.props.handleFilter, type: 'text', placeholder: 'Search...' }),
                         _react2.default.createElement(
                             'select',
-                            { onChange: this.props.handleOption },
+                            { disabled: this.props.disableFilter, onChange: this.props.handleOption },
                             _react2.default.createElement(
                                 'option',
                                 { value: "" },
@@ -10122,7 +10122,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             this.props.productlist.map(function (product) {
                                 return _react2.default.createElement(
                                     'option',
-                                    { value: product.category },
+                                    { key: product.category, value: product.category },
                                     product.category
                                 );
                             })
@@ -10135,13 +10135,78 @@ document.addEventListener('DOMContentLoaded', function () {
         return SearchBar;
     }(_react2.default.Component);
 
-    var Products = function (_React$Component2) {
-        _inherits(Products, _React$Component2);
+    var ProductDescription = function (_React$Component2) {
+        _inherits(ProductDescription, _React$Component2);
 
-        function Products() {
+        function ProductDescription(props) {
+            _classCallCheck(this, ProductDescription);
+
+            var _this2 = _possibleConstructorReturn(this, (ProductDescription.__proto__ || Object.getPrototypeOf(ProductDescription)).call(this, props));
+
+            _this2.state = {
+                product: "Click name of the product/meal you want to read about...",
+                recipe: "",
+                image: ""
+            };
+            return _this2;
+        }
+
+        _createClass(ProductDescription, [{
+            key: 'componentWillReceiveProps',
+            value: function componentWillReceiveProps(nextProps) {
+                if (nextProps.clickedProduct !== this.props.clickedProduct) {
+                    this.setState({
+                        product: nextProps.clickedProduct,
+                        recipe: nextProps.recipe,
+                        image: nextProps.image
+                    });
+                }
+            }
+        }, {
+            key: 'render',
+            value: function render() {
+                return _react2.default.createElement(
+                    'div',
+                    { id: 'recipee', className: 'box recipe' },
+                    _react2.default.createElement(
+                        'h2',
+                        null,
+                        'Recipe'
+                    ),
+                    _react2.default.createElement(
+                        'p',
+                        null,
+                        this.state.product
+                    ),
+                    _react2.default.createElement('div', { className: 'image', style: { backgroundImage: "url(" + this.state.image + ")", display: this.props.displayImage } }),
+                    _react2.default.createElement(
+                        'p',
+                        null,
+                        this.state.recipe
+                    ),
+                    _react2.default.createElement(
+                        'button',
+                        { id: 'backToTop' },
+                        _react2.default.createElement(
+                            'a',
+                            { href: '#top' },
+                            'Back to product list'
+                        )
+                    )
+                );
+            }
+        }]);
+
+        return ProductDescription;
+    }(_react2.default.Component);
+
+    var Products = function (_React$Component3) {
+        _inherits(Products, _React$Component3);
+
+        function Products(props) {
             _classCallCheck(this, Products);
 
-            return _possibleConstructorReturn(this, (Products.__proto__ || Object.getPrototypeOf(Products)).apply(this, arguments));
+            return _possibleConstructorReturn(this, (Products.__proto__ || Object.getPrototypeOf(Products)).call(this, props));
         }
 
         _createClass(Products, [{
@@ -10151,7 +10216,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 var filteredProducts = this.props.products.map(function (obj) {
                     var filtered = Object.values(obj.products).filter(function (p) {
-                        return p.toLowerCase().indexOf(filter) > -1;
+                        return p[0].toLowerCase().indexOf(filter) > -1;
                     });
                     if (filtered.length === 0) return null;
                     return _extends({}, obj, { products: filtered });
@@ -10182,10 +10247,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }, {
             key: 'render',
             value: function render() {
+                var _this4 = this;
+
                 if (this.props.filter != "") {
                     return _react2.default.createElement(
                         'div',
-                        null,
+                        { id: 'top', className: 'box list' },
                         this.getFilteredProductsByName().map(function (product, ind) {
                             return _react2.default.createElement(
                                 'div',
@@ -10198,8 +10265,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                 Object.values(product.products).map(function (name) {
                                     return _react2.default.createElement(
                                         'li',
-                                        null,
-                                        name
+                                        { key: name },
+                                        _react2.default.createElement(
+                                            'a',
+                                            { href: '#recipee', onClick: _this4.props.handleClickedProduct(name) },
+                                            name[0]
+                                        )
                                     );
                                 })
                             );
@@ -10208,7 +10279,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }if (this.props.option != "") {
                     return _react2.default.createElement(
                         'div',
-                        null,
+                        { id: 'top', className: 'box list' },
                         this.getFilteredProductsByOption().map(function (product, ind) {
                             return _react2.default.createElement(
                                 'div',
@@ -10221,8 +10292,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                 Object.values(product.products).map(function (name) {
                                     return _react2.default.createElement(
                                         'li',
-                                        null,
-                                        name
+                                        { key: name },
+                                        _react2.default.createElement(
+                                            'a',
+                                            { href: '#recipee', onClick: _this4.props.handleClickedProduct(name) },
+                                            name[0]
+                                        )
                                     );
                                 })
                             );
@@ -10231,7 +10306,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 return _react2.default.createElement(
                     'div',
-                    null,
+                    { id: 'top', className: 'box list' },
                     this.props.products.map(function (product, ind) {
                         return _react2.default.createElement(
                             'div',
@@ -10244,8 +10319,12 @@ document.addEventListener('DOMContentLoaded', function () {
                             Object.values(product.products).map(function (name) {
                                 return _react2.default.createElement(
                                     'li',
-                                    null,
-                                    name
+                                    { key: name },
+                                    _react2.default.createElement(
+                                        'a',
+                                        { href: '#recipee', onClick: _this4.props.handleClickedProduct(name) },
+                                        name[0]
+                                    )
                                 );
                             })
                         );
@@ -10257,43 +10336,70 @@ document.addEventListener('DOMContentLoaded', function () {
         return Products;
     }(_react2.default.Component);
 
-    var App = function (_React$Component3) {
-        _inherits(App, _React$Component3);
+    var App = function (_React$Component4) {
+        _inherits(App, _React$Component4);
 
         function App(props) {
             _classCallCheck(this, App);
 
-            var _this3 = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+            var _this5 = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-            _this3.handleFilter = function (e) {
-                _this3.setState({ filterText: e.target.value });
+            _this5.handleFilter = function (e) {
+                _this5.setState({ filterText: e.target.value });
+                if (e.target.value.length != 0) {
+                    _this5.setState({ disableFilter: true });
+                } else {
+                    _this5.setState({ disableFilter: false });
+                }
             };
 
-            _this3.handleOption = function (e) {
-                _this3.setState({ option: e.target.value });
+            _this5.handleOption = function (e) {
+                _this5.setState({ option: e.target.value });
+                if (e.target.value != "") {
+                    _this5.setState({ disableOption: true });
+                } else {
+                    _this5.setState({ disableOption: false });
+                }
             };
 
-            _this3.state = {
+            _this5.handleClickedProduct = function (name) {
+                return function (e) {
+                    _this5.setState({
+                        clickedProduct: name[0],
+                        recipe: name[1],
+                        image: name[2],
+                        displayImage: "block"
+                    });
+                };
+            };
+
+            _this5.state = {
                 productlist: [],
                 filterText: "",
-                option: ""
+                option: "",
+                clickedProduct: "",
+                recipe: "",
+                image: "",
+                disableFilter: false,
+                disableOption: false,
+                displayImage: "none"
             };
-            return _this3;
+            return _this5;
         }
 
         _createClass(App, [{
             key: 'componentDidMount',
             value: function componentDidMount() {
-                var _this4 = this;
+                var _this6 = this;
 
                 fetch('http://localhost:3000/products').then(function (r) {
                     return r.json();
                 }).then(function (data) {
-                    _this4.setState({});
+                    _this6.setState({});
                     var products = Object.keys(data).map(function (id) {
                         return data[id];
                     });
-                    _this4.setState({
+                    _this6.setState({
                         productlist: products
                     });
                 });
@@ -10303,19 +10409,28 @@ document.addEventListener('DOMContentLoaded', function () {
             value: function render() {
                 return _react2.default.createElement(
                     'div',
-                    null,
+                    { className: 'wrapper' },
                     _react2.default.createElement(
-                        'h1',
-                        null,
-                        'Product list'
+                        'div',
+                        { className: 'nav', style: { backgroundImage: "url(./dist/img/nav.jpg)" } },
+                        _react2.default.createElement(
+                            'h1',
+                            null,
+                            'Product list'
+                        ),
+                        _react2.default.createElement(
+                            'h2',
+                            null,
+                            'Traditional food from Silesia'
+                        ),
+                        _react2.default.createElement(SearchBar, { disableOption: this.state.disableOption, disableFilter: this.state.disableFilter, handleOption: this.handleOption, filter: this.state.filterText, handleFilter: this.handleFilter, productlist: this.state.productlist })
                     ),
                     _react2.default.createElement(
-                        'h2',
-                        null,
-                        'Traditional food from Silesia'
-                    ),
-                    _react2.default.createElement(SearchBar, { handleOption: this.handleOption, filter: this.state.filterText, handleFilter: this.handleFilter, productlist: this.state.productlist }),
-                    _react2.default.createElement(Products, { option: this.state.option, filter: this.state.filterText, products: this.state.productlist })
+                        'div',
+                        { className: 'full' },
+                        _react2.default.createElement(Products, { handleClickedProduct: this.handleClickedProduct, option: this.state.option, filter: this.state.filterText, products: this.state.productlist }),
+                        _react2.default.createElement(ProductDescription, { displayImage: this.state.displayImage, image: this.state.image, recipe: this.state.recipe, clickedProduct: this.state.clickedProduct })
+                    )
                 );
             }
         }]);

@@ -1,38 +1,105 @@
+*{
+  box-sizing: border-box;
+}
 html{
   font-family: 'Muli', sans-serif;
+  height:100%;
     body{
     margin: 0;
     padding: 0;
   }
 }
-.app{
-  display: flex;
-}
-.right{
-  width: 50%;
-  height: 100vh;
-  background-size: cover;
-  background-position: right;
-}
-button {
-  background-color: orange;
-  color: white;
-  border: 0px orange solid;
+input{
+  display: block;
   border-radius: 3px;
-  height: 30px;
-  margin-top: 20px;
+  border: none;
 }
-.left{
-  h1{
-    font-weight: 900;
+h1{
+  margin: 0;
+  padding: 0;
+}
+#app{
+  display: flex;
+  height: 100vh;
+}
+.wrapper{
+  width: 100%;
+}
+.nav{
+  padding: 20px;
+  box-shadow: 0px 3px 23px 3px rgba(0,0,0,0.75);
+  background-size: cover;
+  color: white;
+  height: 240px;
+}
+.full {
+  width: 100%;
+  justify-content: space-between;
+  @media (min-width: 800px){
+    display: flex;
+  }
+}
+.box{
+  width: 100%;
+  h2{
+    padding: 0 20px;
   }
   p{
-    font-weight: 300;
+    padding: 0 20px;
   }
-  input{
-    margin: 5px auto;
+  @media (min-width: 800px){
+    width: 50%;
   }
-  width: 50%;
+}
+li{
+  list-style: none;
+  padding: 5px 20px;
+}
+a:hover{
+  cursor: pointer;
+  text-decoration: underline;
+  color: orange;
+}
+.image{
+  width: 100%;
+  height: 300px;
+  background-size: cover;
+  @media (min-width: 800px){
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-sizing: border-box;
+    margin: 20px;
+  }
+}
+li:nth-child(2n+0){
+  background-color: rgba(0, 0, 0, 0.03);
+}
+a{
+  text-decoration: none;
+  color: black;
+}
+input:disabled{
+  background: rgba(255, 255, 255, 0.4);
+}
+.list{
+  @media (min-width: 800px){
+    overflow: scroll;
+    height: (100vh);
+  }
+}
+.recipe{
   height: 100vh;
-  padding: 0 20px;
+}
+#backToTop{
+  margin-left: 20px;
+  margin-bottom: 20px;
+  background-color: orange;
+  border: none;
+  height: 30px;
+  a{
+    color: white;
+    text-decoration: none;
+  }
+  @media (min-width: 800px){
+    display: none;
+  }
 }
