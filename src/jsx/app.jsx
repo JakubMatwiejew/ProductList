@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function(){
                     <p>{this.state.product}</p>
                     <div className="image" style={{backgroundImage: "url(" + this.state.image + ")", display: this.props.displayImage}}></div>
                     <p>{this.state.recipe}</p>
-                    <button id="backToTop"><a href="#top">Back to product list</a></button>
+                    <button id="backToTop"><a href="#top">Back to product list<i className="arrow up"></i></a></button>
                 </div>
             )
         }
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function(){
         render() {
             if(this.props.filter!="") {
                 return (
-                    <div id="top" className="box list">
+                    <div className="box list">
                         {this.getFilteredProductsByName()
                             .map((product, ind) =>
                                 <div key={ind}>
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 );
             } if(this.props.option!="") {
                 return (
-                    <div id="top" className="box list">
+                    <div className="box list">
                         {this.getFilteredProductsByOption()
                             .map((product, ind) =>
                                 <div key={ind}>
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 );
             }
             return (
-                <div id="top" className="box list">
+                <div className="box list">
                     {this.props.products
                         .map((product, ind) =>
                             <div key={ind}>
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function(){
         render(){
             return(
                 <div className="wrapper">
-                    <div className="nav" style={{backgroundImage: "url(./dist/img/nav.jpg)"}}>
+                    <div id="top" className="nav" style={{backgroundImage: "url(./dist/img/nav.jpg)"}}>
                         <h1>Product list</h1>
                         <h2>Traditional food from Silesia</h2>
                         <SearchBar disableOption={ this.state.disableOption } disableFilter={ this.state.disableFilter } handleOption= { this.handleOption } filter={ this.state.filterText } handleFilter= { this.handleFilter } productlist={ this.state.productlist } />

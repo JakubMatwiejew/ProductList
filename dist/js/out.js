@@ -10190,7 +10190,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         _react2.default.createElement(
                             'a',
                             { href: '#top' },
-                            'Back to product list'
+                            'Back to product list',
+                            _react2.default.createElement('i', { className: 'arrow up' })
                         )
                     )
                 );
@@ -10252,7 +10253,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (this.props.filter != "") {
                     return _react2.default.createElement(
                         'div',
-                        { id: 'top', className: 'box list' },
+                        { className: 'box list' },
                         this.getFilteredProductsByName().map(function (product, ind) {
                             return _react2.default.createElement(
                                 'div',
@@ -10279,7 +10280,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }if (this.props.option != "") {
                     return _react2.default.createElement(
                         'div',
-                        { id: 'top', className: 'box list' },
+                        { className: 'box list' },
                         this.getFilteredProductsByOption().map(function (product, ind) {
                             return _react2.default.createElement(
                                 'div',
@@ -10306,7 +10307,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 return _react2.default.createElement(
                     'div',
-                    { id: 'top', className: 'box list' },
+                    { className: 'box list' },
                     this.props.products.map(function (product, ind) {
                         return _react2.default.createElement(
                             'div',
@@ -10412,7 +10413,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     { className: 'wrapper' },
                     _react2.default.createElement(
                         'div',
-                        { className: 'nav', style: { backgroundImage: "url(./dist/img/nav.jpg)" } },
+                        { id: 'top', className: 'nav', style: { backgroundImage: "url(./dist/img/nav.jpg)" } },
                         _react2.default.createElement(
                             'h1',
                             null,

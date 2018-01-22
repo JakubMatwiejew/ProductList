@@ -88,12 +88,20 @@ input:disabled {
 #backToTop {
   margin-left: 20px;
   margin-bottom: 20px;
-  background-color: orange;
-  border: none;
+  background-color: transparent;
+  border: 1px solid orange;
   height: 30px; }
   #backToTop a {
-    color: white;
+    color: orange;
     text-decoration: none; }
+    #backToTop a i {
+      border: solid orange;
+      border-width: 0 1px 1px 0;
+      display: inline-block;
+      padding: 4px; }
+    #backToTop a .up {
+      transform: rotate(-135deg);
+      -webkit-transform: rotate(-135deg); }
   @media (min-width: 800px) {
     #backToTop {
       display: none; } }
